@@ -79,10 +79,14 @@ var finish = function (href) {
 };
 
 // main
-rl.question('query ? ')
- .then(getTZfromQuery)
- .then(getTZFromTZ)
- .then(getKKfromTZ)
- .then(getMagnetKK)
- .done(finish)
- .fail(function (e) { console.warn('error: ' + e.statusText); });
+var main = function () {
+ var query = process.argv.slice(2).join(' ');
+ getTZfromQuery(query)
+  .then(getTZFromTZ)
+  .then(getKKfromTZ)
+  .then(getMagnetKK)
+  .done(finish)
+  .fail(function (e) { console.warn('error: ' + e.statusText); });
+}
+
+main();
