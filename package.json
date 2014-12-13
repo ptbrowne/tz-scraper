@@ -1,0 +1,12 @@
+{
+  "name": "tz-cli-scraper",
+  "version": "0.0.1",
+  "description": "no frills torrentz scraper",
+  "license": "MIT",
+  "devDependencies": {
+    "copy-paste": "^1.0.1",
+    "jquery": "^2.1.1",
+    "jsdom": "^1.4.1",
+    "xmlhttprequest": "^1.6.0"
+  }
+}
