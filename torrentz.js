@@ -1,10 +1,13 @@
 // imports
 var readline = require('readline');
+var colour = require('colour');
+var exec = require('child_process').exec;
 var rl = readline.createInterface({
  input: process.stdin,
  output: process.stdout
 });
-
+var pad = require('pad');
+var cheerio = require('cheerio');
 var jsdom = require("jsdom").jsdom;
 var markup = '<html><body><h1 class="example">Hello World!</h1><p class="hello">Heya Big World!</body></html>';
 var doc = jsdom(markup);
@@ -15,6 +18,7 @@ $.support.cors = true;
 $.ajaxSettings.xhr = function() {
     return new XMLHttpRequest();
 };
+var httpGet = $.get;
 
 var oldRlQuestion = rl.question;
 rl.question = function (text) {
@@ -25,30 +29,40 @@ rl.question = function (text) {
  return def.promise();
 };
 
-var clipboard = require('copy-paste')
+// helper
+var setLoadingText = function (data) {
+  console.log("opening...");
+  return data;
+};
 
 // real meat
 
 var getTZfromQuery = function (query) {
   var url ='http://torrentz.com/search?q=' + query.replace(' ', '+');
-  return $.get(url);
+  return httpGet(url);
 };
 
-
 var getTZFromTZ = function (page) {
-  var links = $(page).find('a');
+  var $ = cheerio.load(page);
+  var rows = $('.results dl');
   // pretty fragile
-  var offset = 18;
-  links.slice(offset,28).each(function (i,e) {
-   console.info(i, $(e).text());
+  rows.slice(0,10).each(function (i,e) {
+    var row = $(e);
+    var n = pad(('' + i));
+    var s = pad(7, row.find('.s').text());
+    var u = pad(4, row.find('.u').text());
+    var d = pad(4, row.find('.u').text(), 4);
+    var r = pad(4, (u/d*100).toFixed(2) + '%');
+    var name = pad(row.find('a').text(), 80);
+   console.info([n.yellow, name, s.blue, u.red, d.green, r].join(' '));
   });
 
   return rl.question('which one? ')
+   .then(setLoadingText)
    .then(function (answer) {
-    var l = $(links[parseInt(answer) + offset]);
+    var l = $(rows[parseInt(answer)]).find('a');
     var url = 'http://torrentz.com' + l.attr('href');
-    console.log(url)
-    return $.get(url);
+    return httpGet(url);
    });
 };
 
@@ -58,7 +72,7 @@ var getKKfromTZ = function (page) {
       var href = $(e).attr('href');
       return href && href.indexOf('katproxy') !== -1;
     }).attr('href');
-  return $.get(kk);
+  return httpGet(kk);
 };
 
 var getMagnetKK = function (page) {
@@ -71,16 +85,14 @@ var getMagnetKK = function (page) {
 };
 
 var finish = function (href) {
-  console.log(href);
-  clipboard.copy(href, function () {
-   console.log('copied!');
-   process.exit();
-  });
+  exec('open ' + href);
+  process.exit();
 };
 
 // main
 var main = function () {
  var query = process.argv.slice(2).join(' ');
+ console.log('searching...')
  getTZfromQuery(query)
   .then(getTZFromTZ)
   .then(getKKfromTZ)
