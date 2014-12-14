@@ -85,6 +85,7 @@ var getMagnetKK = function (page) {
 };
 
 var finish = function (href) {
+  console.log('enjoy'.rainbow);
   exec('open ' + href);
   process.exit();
 };
