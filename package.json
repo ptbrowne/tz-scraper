@@ -6,6 +6,7 @@
   "devDependencies": {
     "cheerio": "^0.18.0",
     "colour": "^0.7.1",
+    "inquirer": "^0.8.0",
     "jquery": "^2.1.1",
     "jsdom": "^1.4.1",
     "pad": "0.0.5",
