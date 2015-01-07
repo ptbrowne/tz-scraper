@@ -1,5 +1,4 @@
 tzcli
 ====
 
-fed up with ads
-simple cli for torrentz
+Only use for legal content
