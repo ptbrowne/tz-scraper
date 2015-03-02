@@ -35,9 +35,9 @@ var getTZfromQuery = function (query) {
 var mkChoiceFromRow = function (row) {
   console.log('mkChoiceFromRow')
   var s = pad(7, row.find('.s').text());
-  var u = pad(4, row.find('.u').text());
-  var d = pad(4, row.find('.u').text(), 4);
-  var r = pad(4, (u/d*100).toFixed(2) + '%');
+  var u = pad(6, row.find('.u').text());
+  var d = pad(6, row.find('.u').text(), 4);
+  var r = pad(4, (u.replace(',', '')/d.replace(',', '')*100).toFixed(2) + '%');
   var name = pad(row.find('a').text().slice(0,80), 80);
   return [name, s.blue, u.red, d.green, r].join(' ');
 };
