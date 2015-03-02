@@ -1,6 +1,6 @@
 {
   "name": "tz-cli-scraper",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "no frills torrentz scraper",
   "license": "MIT",
   "dependencies": {
